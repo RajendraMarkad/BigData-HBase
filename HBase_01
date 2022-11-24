@@ -76,4 +76,43 @@ COLUMN                                   CELL
  order:number                            timestamp=1669288122604, value=ord-2                                                                                  
 1 row(s)
 Took 0.0616 seconds                                                                                                                                            
-hbase(main):016:0> 
+hbase(main):016:0> drop 'customer'
+
+ERROR: Table customer is enabled. Disable it first.
+
+For usage try 'help "drop"'
+
+Took 0.0256 seconds                                                                                                                                            
+hbase(main):017:0> disable 'customer'
+Took 0.7843 seconds                                                                                                                                            
+hbase(main):018:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+org.apache.hadoop.hbase.TableNotEnabledException: customer is disabled.
+        at org.apache.hadoop.hbase.client.ConnectionImplementation.relocateRegion(ConnectionImplementation.java:761)
+        at org.apache.hadoop.hbase.client.RpcRetryingCallerWithReadReplicas.getRegionLocations(RpcRetryingCallerWithReadReplicas.java:328)
+        at org.apache.hadoop.hbase.client.ScannerCallable.prepare(ScannerCallable.java:139)
+        at org.apache.hadoop.hbase.client.ScannerCallableWithReplicas$RetryingRPC.prepare(ScannerCallableWithReplicas.java:408)
+        at org.apache.hadoop.hbase.client.RpcRetryingCallerImpl.callWithRetries(RpcRetryingCallerImpl.java:105)
+        at org.apache.hadoop.hbase.client.ResultBoundedCompletionService$QueueingFuture.run(ResultBoundedCompletionService.java:80)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+        at java.lang.Thread.run(Thread.java:750)
+
+ERROR: Table customer is disabled!
+
+For usage try 'help "scan"'
+
+Took 0.3852 seconds                                                                                                                                            
+hbase(main):019:0> enable 'customer'
+Took 0.7523 seconds                                                                                                                                            
+hbase(main):020:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+ Raaj                                    column=order:number, timestamp=1669288122604, value=ord-2                                                             
+ Rajendra                                column=address:city, timestamp=1669287535391, value=Indapur                                                           
+ Rajendra                                column=address:code, timestamp=1669287577173, value=222233                                                            
+ Rajendra                                column=address:state, timestamp=1669287554196, value=Maharashtra                                                      
+ Rajendra                                column=order:amount, timestamp=1669287678495, value=2025                                                              
+ Rajendra                                column=order:number, timestamp=1669287656751, value=ord-1                                                             
+2 row(s)
+Took 0.0523 seconds                                                                                                                                            
+hbase(main):021:0> 
