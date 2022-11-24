@@ -1,0 +1,79 @@
+ *  Executing task: hbase shell 
+
+2022-11-24 16:08:52,059 WARN  [main] util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+HBase Shell
+Use "help" to get list of supported commands.
+Use "exit" to quit this interactive shell.
+For Reference, please visit: http://hbase.apache.org/2.0/book.html#shell
+Version 2.2.4, r67779d1a325a4f78a468af3339e73bf075888bac, 2020年 03月 11日 星期三 12:57:39 CST
+Took 0.0035 seconds                                                                                                                                  
+hbase(main):001:0> list
+TABLE                                                                                                                                                
+0 row(s)
+Took 0.4803 seconds                                                                                                                                  
+=> []
+hbase(main):002:0> list
+TABLE                                                                                                                                                
+0 row(s)
+Took 0.0067 seconds                                                                                                                                  
+=> []
+hbase(main):003:0> create 'customer', 'address','order'
+Created table customer
+Took 0.8443 seconds                                                                                                                                  
+=> Hbase::Table - customer
+hbase(main):004:0> list
+TABLE                                                                                                                                                
+customer                                                                                                                                             
+1 row(s)
+Took 0.0208 seconds                                                                                                                                  
+=> ["customer"]
+hbase(main):005:0> put 'Rajendra','customer:address','Indapur'
+
+ERROR: wrong number of arguments (3 for 4)
+
+For usage try 'help "put"'
+
+Took 0.0175 seconds                                                                                                                                            
+hbase(main):006:0> put 'customer','Rajendra','address:city','Indapur'
+Took 0.1881 seconds                                                                                                                                            
+hbase(main):007:0> put 'customer','Rajendra','address:state','Maharashtra'
+Took 0.0041 seconds                                                                                                                                            
+hbase(main):008:0> put 'customer','Rajendra','address:code','222233'
+Took 0.0087 seconds                                                                                                                                            
+hbase(main):009:0> put 'customer','Rajendra','order:number','ord-1'
+Took 0.0084 seconds                                                                                                                                            
+hbase(main):010:0> put 'customer','Rajendra','order:amount','2025'
+Took 0.0049 seconds                                                                                                                                            
+hbase(main):011:0> list
+TABLE                                                                                                                                                          
+customer                                                                                                                                                       
+1 row(s)
+Took 0.0241 seconds                                                                                                                                            
+=> ["customer"]
+hbase(main):012:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+ Rajendra                                column=address:city, timestamp=1669287535391, value=Indapur                                                           
+ Rajendra                                column=address:code, timestamp=1669287577173, value=222233                                                            
+ Rajendra                                column=address:state, timestamp=1669287554196, value=Maharashtra                                                      
+ Rajendra                                column=order:amount, timestamp=1669287678495, value=2025                                                              
+ Rajendra                                column=order:number, timestamp=1669287656751, value=ord-1                                                             
+1 row(s)
+Took 0.0412 seconds                                                                                                                                            
+hbase(main):013:0> put 'customer','Raaj','order:number','ord-2'
+Took 0.0112 seconds                                                                                                                                            
+hbase(main):014:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+ Raaj                                    column=order:number, timestamp=1669288122604, value=ord-2                                                             
+ Rajendra                                column=address:city, timestamp=1669287535391, value=Indapur                                                           
+ Rajendra                                column=address:code, timestamp=1669287577173, value=222233                                                            
+ Rajendra                                column=address:state, timestamp=1669287554196, value=Maharashtra                                                      
+ Rajendra                                column=order:amount, timestamp=1669287678495, value=2025                                                              
+ Rajendra                                column=order:number, timestamp=1669287656751, value=ord-1                                                             
+2 row(s)
+Took 0.0133 seconds                                                                                                                                            
+hbase(main):015:0> get 'customer','Raaj'
+COLUMN                                   CELL                                                                                                                  
+ order:number                            timestamp=1669288122604, value=ord-2                                                                                  
+1 row(s)
+Took 0.0616 seconds                                                                                                                                            
+hbase(main):016:0> 
