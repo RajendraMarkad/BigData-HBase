@@ -1,9 +1,9 @@
-# HBase Shell commands :
+``` # HBase Shell commands :
 # General commands ---> status, version, table_help, whoami
 # Table management command ----> create, list, describe, disable, enable, drop,alter
 # data manupulation command ---> showfilte, disable_all, enable_all
 # cluster replication commands ---> count, put, get, scan, delete, truncate, truncate_all
-
+```
 *  Executing task: hbase shell 
 
 2022-11-24 16:08:52,059 WARN  [main] util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
