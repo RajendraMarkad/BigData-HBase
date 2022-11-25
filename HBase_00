@@ -1,3 +1,7 @@
-Note: Metadata of Hbase is stored in HDFS and actual data stored inside the region itself.
-      we can see stored data/tables at HDFS location at hbase directory--> hadoop fs -ls /hbase/data/default/
-      case sensitive syntax/keywords
+Note: 
+Metadata of Hbase is stored in HDFS and actual data stored inside the region itself.
+we can see stored data/tables at HDFS location at hbase directory--> hadoop fs -ls /hbase/data/default/
+case sensitive syntax/keywords.
+Row key can be unique.
+The default versions is 1 and we can specify max as we wish:
+(HBase does not overwrite row values, but rather stores different values per row by time (and qualifier). Excess versions are removed during major compactions.)
