@@ -1,0 +1,2 @@
+Note: Metadata of Hbase is stored in HDFS and actual data stored inside the region itself.
+      we can see stored data/tables at HDFS location at hbase directory--> hadoop fs -ls /hbase/data/default/
