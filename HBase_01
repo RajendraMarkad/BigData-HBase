@@ -173,4 +173,103 @@ TABLE
 0 row(s)
 Took 0.0053 seconds                                                                                                                                            
 => []
-hbase(main):017:0> 
+hbase(main):017:0> exists 'customer'
+Table customer does not exist                                                                                                                                  
+Took 0.0150 seconds                                                                                                                                            
+=> false
+hbase(main):033:0> put 'customer','suddu','order:Product_name','Facewash'
+Took 0.0116 seconds                                                                                                                                            
+hbase(main):034:0> count 'customer'
+4 row(s)
+Took 0.0100 seconds                                                                                                                                            
+=> 4
+hbase(main):035:0> count 'customer'
+4 row(s)
+Took 0.0086 seconds                                                                                                                                            
+=> 4
+hbase(main):036:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+ Akash                                   column=address:city, timestamp=1669352667495, value=Mumbai                                                            
+ Akash                                   column=address:state, timestamp=1669352754498, value=Maharashtra                                                      
+ Akash                                   column=order:amount, timestamp=1669352820764, value=5555                                                              
+ Akash                                   column=order:number, timestamp=1669352808849, value=ord-02                                                            
+ Rajendra                                column=address:city, timestamp=1669352432420, value=Indapur                                                           
+ Rajendra                                column=address:code, timestamp=1669352458653, value=222233                                                            
+ Rajendra                                column=address:state, timestamp=1669352442553, value=Maharashtra                                                      
+ Rajendra                                column=order:number, timestamp=1669352512526, value=ord-1                                                             
+ shubham                                 column=address:city, timestamp=1669352924065, value=delhi                                                             
+ suddu                                   column=order:Product_name, timestamp=1669353305651, value=Facewash                                                    
+4 row(s)
+Took 0.0174 seconds                                                                                                                                            
+hbase(main):037:0> get 'customer','Akash','order:amount'
+COLUMN                                   CELL                                                                                                                  
+ order:amount                            timestamp=1669352820764, value=5555                                                                                   
+1 row(s)
+Took 0.0183 seconds                                                                                                                                            
+hbase(main):038:0> delete 'customer','shubham','address:city'
+Took 0.0056 seconds                                                                                                                                            
+hbase(main):039:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+ Akash                                   column=address:city, timestamp=1669352667495, value=Mumbai                                                            
+ Akash                                   column=address:state, timestamp=1669352754498, value=Maharashtra                                                      
+ Akash                                   column=order:amount, timestamp=1669352820764, value=5555                                                              
+ Akash                                   column=order:number, timestamp=1669352808849, value=ord-02                                                            
+ Rajendra                                column=address:city, timestamp=1669352432420, value=Indapur                                                           
+ Rajendra                                column=address:code, timestamp=1669352458653, value=222233                                                            
+ Rajendra                                column=address:state, timestamp=1669352442553, value=Maharashtra                                                      
+ Rajendra                                column=order:number, timestamp=1669352512526, value=ord-1                                                             
+ suddu                                   column=order:Product_name, timestamp=1669353305651, value=Facewash                                                    
+3 row(s) 
+Took 0.0147 seconds                                                                                                                                            
+hbase(main):040:0> alter 'customer', delete =>'order'
+
+ERROR: wrong number of arguments (0 for 3)
+
+For usage try 'help "delete"'
+
+Took 0.0055 seconds                                                                                                                                            
+
+ERROR: no implicit conversion of nil into String
+
+For usage try 'help "alter"'
+
+Took 0.0880 seconds                                                                                                                                            
+hbase(main):041:0> alter 'customer', 'delete' =>'order'
+Updating all regions with the new schema...
+1/1 regions updated.
+Done.
+Took 2.2729 seconds---> (deleted all the data related to order family)                                                                                                                                             
+hbase(main):042:0> scan 'customer'
+ROW                                      COLUMN+CELL                                                                                                           
+ Akash                                   column=address:city, timestamp=1669352667495, value=Mumbai                                                            
+ Akash                                   column=address:state, timestamp=1669352754498, value=Maharashtra                                                      
+ Rajendra                                column=address:city, timestamp=1669352432420, value=Indapur                                                           
+ Rajendra                                column=address:code, timestamp=1669352458653, value=222233                                                            
+ Rajendra                                column=address:state, timestamp=1669352442553, value=Maharashtra                                                      
+2 row(s)
+Took 0.0196 seconds                                                                                                                                          
+hbase(main):043:0> 
+
+
+# versioning
+
+hbase(main):043:0> create 'employee', { name=> 'address'}
+NameError: undefined local variable or method `name' for main:Object
+
+hbase(main):044:0> create 'employee', { NAME => 'address'}
+Created table employee
+Took 0.7581 seconds                                                                                                                                            
+=> Hbase::Table - employee
+hbase(main):045:0> describe 'employee'
+Table employee is ENABLED                                                                                                                                      
+employee                                                                                                                                                       
+COLUMN FAMILIES DESCRIPTION                                                                                                                                    
+{NAME => 'address', VERSIONS => '1', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => '
+false', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', 
+IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'} 
+
+1 row(s)
+
+QUOTAS                                                                                                                                                         
+0 row(s)
+Took 0.1065 seconds     
