@@ -1,0 +1,164 @@
+#Versioning in HBase
+In Simple Words if we talk about Versions then it is just like hadoop replication factor. In hadoop by default Replication factor is 3.
+In HBase Versions default is 3 and you can change it as per your requirement.
+Versions is nothing but maintaining the history of a column.
+
+
+
+create ‘emp’ , ‘cf’
+
+alter ‘emp’ , {NAME=>’cf’,VERSIONS=>4}
+
+hbase(main):212:0* put 'emp' , 1 , 'cf:Salary' , 6000
+
+0 row(s) in 0.0330 seconds
+
+hbase(main):213:0> put 'emp' , 1 , 'cf:Salary' , 7000
+
+0 row(s) in 0.0230 seconds
+
+hbase(main):214:0> put 'emp' , 1 , 'cf:Salary' , 8000
+
+0 row(s) in 0.0240 seconds
+
+hbase(main):215:0> put 'emp' , 1 , 'cf:Salary' , 9000
+
+0 row(s) in 0.0220 seconds
+
+hbase(main):216:0> put 'emp' , 1 , 'cf:Salary' , 10000
+
+0 row(s) in 0.0210 seconds
+
+hbase(main):219:0> get 'emp' , 1 , {COLUMN=>'cf:Salary',VERSIONS => 4 }
+
+COLUMN CELL
+
+cf:Salary timestamp=1586586460772, value=10000
+
+cf:Salary timestamp=1586586457185, value=9000
+
+cf:Salary timestamp=1586586454992, value=8000
+
+cf:Salary timestamp=1586586452822, value=7000
+
+4 row(s) in 0.0580 seconds
+
+And when you execute scan tablename then it will show the always latest version data.
+
+hbase(main):218:0* scan 'emp'
+
+ROW COLUMN+CELL
+
+1 column=cf:Salary, timestamp=1586586460772, value=10000
+
+
+
+# or 
+
+
+
+hbase(main):003:0> create 'student', {NAME=>'personal', VERSIONS=>'5'}, 'school'
+Created table student
+Took 1.2866 seconds                                                                                                                                            
+=> Hbase::Table - student
+hbase(main):004:0> describe 'student'
+Table student is ENABLED                                                                                                                                       
+student                                                                                                                                                        
+COLUMN FAMILIES DESCRIPTION                                                                                                                                    
+{NAME => 'personal', VERSIONS => '5', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => 
+'false', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false',
+ IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'}
+
+{NAME => 'school', VERSIONS => '1', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => 'f
+alse', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', I
+N_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'}  
+
+2 row(s)
+
+QUOTAS                                                                                                                                                         
+0 row(s)
+Took 0.2838 seconds                                                                                                                                            
+hbase(main):005:0> alter 'student',NAME=>'school', VERSIONS=>5
+Updating all regions with the new schema...
+1/1 regions updated.
+Done.
+Took 2.1056 seconds                                                                                                                                            
+hbase(main):006:0> describe 'student'
+Table student is ENABLED                                                                                                                                       
+student                                                                                                                                                        
+COLUMN FAMILIES DESCRIPTION                                                                                                                                    
+{NAME => 'personal', VERSIONS => '5', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => 
+'false', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false',
+ IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'}
+
+{NAME => 'school', VERSIONS => '5', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => 'f
+alse', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', I
+N_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'}  
+2 row(s)
+QUOTAS                                                                                                                                                         
+0 row(s)
+Took 0.0579 seconds                                                                                                                                            
+Took 0.0405 seconds                                                                                                                                            
+hbase(main):008:0> put 'student','1','personal:name','Rajendra'
+Took 0.0626 seconds                                                                                                                                            
+hbase(main):009:0> put 'student','1','personal:name','Rajendra Markad'
+Took 0.0049 seconds                                                                                                                                            
+hbase(main):010:0> put 'student','1','school:name','SNR'
+Took 0.0049 seconds                                                                                                                                            
+hbase(main):011:0> put 'student','1','school:name','SBPP'
+Took 0.0040 seconds                                                                                                                                            
+hbase(main):012:0> scan 'student'
+ROW                                      COLUMN+CELL                                                                                                           
+ 1                                       column=personal:name, timestamp=1669393494709, value=Rajendra Markad                                                  
+ 1                                       column=school:name, timestamp=1669393557980, value=SBPP                                                               
+1 row(s)
+Took 0.0511 seconds                                                                                                                                            
+hbase(main):013:0> 
+
+#if we want to see entire row/version of data
+
+hbase(main):013:0> scan 'student',{VERSIONS=>10}
+ROW                                      COLUMN+CELL                                                                                                           
+ 1                                       column=personal:name, timestamp=1669393494709, value=Rajendra Markad                                                  
+ 1                                       column=personal:name, timestamp=1669393456569, value=Rajendra                                                         
+ 1                                       column=school:name, timestamp=1669393557980, value=SBPP                                                               
+ 1                                       column=school:name, timestamp=1669393543803, value=SNR                                                                
+1 row(s)
+Took 0.0148 seconds                                                                                                                                            
+
+
+hbase(main):014:0> put 'student','2','school:name','SBPP_01'
+Took 0.0137 seconds                                                                                                                                            
+hbase(main):015:0> put 'student','2','school:name','SBPP_02'
+Took 0.0042 seconds                                                                                                                                            
+hbase(main):016:0> put 'student','2','school:name','SBPP_03'
+Took 0.0042 seconds                                                                                                                                            
+hbase(main):017:0> put 'student','2','school:name','SBPP_04'
+Took 0.0060 seconds                                                                                                                                            
+hbase(main):018:0> put 'student','2','school:name','SBPP_05'
+Took 0.0039 seconds                                                                                                                                            
+hbase(main):019:0> put 'student','2','school:name','SBPP_06'
+Took 0.0048 seconds                                                                                                                                            
+hbase(main):020:0> put 'student','2','school:name','SBPP_07'
+Took 0.0037 seconds                                                                                                                                            
+hbase(main):021:0> scan 'student'
+ROW                                      COLUMN+CELL                                                                                                           
+ 1                                       column=personal:name, timestamp=1669393494709, value=Rajendra Markad                                                  
+ 1                                       column=school:name, timestamp=1669393557980, value=SBPP                                                               
+ 2                                       column=school:name, timestamp=1669394239765, value=SBPP_07                                                            
+2 row(s)
+Took 0.0091 seconds                                                                                                                                            
+hbase(main):022:0> scan 'student', {VERSIONS=>15}
+ROW                                      COLUMN+CELL                                                                                                           
+ 1                                       column=personal:name, timestamp=1669393494709, value=Rajendra Markad                                                  
+ 1                                       column=personal:name, timestamp=1669393456569, value=Rajendra                                                         
+ 1                                       column=school:name, timestamp=1669393557980, value=SBPP                                                               
+ 1                                       column=school:name, timestamp=1669393543803, value=SNR                                                                
+ 2                                       column=school:name, timestamp=1669394239765, value=SBPP_07                                                            
+ 2                                       column=school:name, timestamp=1669394233941, value=SBPP_06                                                            
+ 2                                       column=school:name, timestamp=1669394227817, value=SBPP_05                                                            
+ 2                                       column=school:name, timestamp=1669394219880, value=SBPP_04                                                            
+ 2                                       column=school:name, timestamp=1669394213995, value=SBPP_03                                                            
+2 row(s)
+Took 0.0235 seconds   --->It keeps the record of only latest fixed/specified versions( here Versions=5  so database keeps record of only latest 5 values)                                                                                                                                         
+hbase(main):023:0> 
