@@ -1,8 +1,9 @@
-``` # HBase Shell commands :
+``` # HBase Shell commands : 
 # General commands ---> status, version, table_help, whoami
 # Table management command ----> create, list, describe, disable, enable, drop,alter
 # data manupulation command ---> showfilte, disable_all, enable_all
 # cluster replication commands ---> count, put, get, scan, delete, truncate, truncate_all
+note: all are case sensitive
 ```
 *  Executing task: hbase shell 
 
@@ -267,9 +268,49 @@ COLUMN FAMILIES DESCRIPTION
 {NAME => 'address', VERSIONS => '1', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => '
 false', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', 
 IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'} 
-
 1 row(s)
-
 QUOTAS                                                                                                                                                         
 0 row(s)
-Took 0.1065 seconds     
+Took 0.1065 seconds --> ( VERSIONS => '1' )
+
+#creating another table with specifing version as 3
+
+base(main):046:0> create 'employee_01', { NAME => 'address', VERSIONS => 3}
+Created table employee_01
+Took 0.7462 seconds                                                                                                                                            
+=> Hbase::Table - employee_01
+hbase(main):047:0> describe 'employee_01'
+Table employee_01 is ENABLED                                                                                                                                   
+employee_01                                                                                                                                                    
+COLUMN FAMILIES DESCRIPTION                                                                                                                                    
+{NAME => 'address', VERSIONS => '3', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => '
+false', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', 
+IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'} 
+1 row(s)
+QUOTAS                                                                                                                                                         
+0 row(s)
+Took 0.0682 seconds    ----> (VERSIONS => '3') 
+
+
+# we can alter the version of already created table
+
+hbase(main):048:0> alter 'employee_01', { Name => 'address', VERSIONS => 5}
+NameError: uninitialized constant Name
+
+hbase(main):049:0> alter 'employee_01', { NAME => 'address', VERSIONS => 5}
+Updating all regions with the new schema...
+1/1 regions updated.
+Done.
+Took 1.8749 seconds                                                                                                                                            
+hbase(main):050:0> describe 'employee_01'
+Table employee_01 is ENABLED                                                                                                                                   
+employee_01                                                                                                                                                    
+COLUMN FAMILIES DESCRIPTION                                                                                                                                    
+{NAME => 'address', VERSIONS => '5', EVICT_BLOCKS_ON_CLOSE => 'false', NEW_VERSION_BEHAVIOR => 'false', KEEP_DELETED_CELLS => 'FALSE', CACHE_DATA_ON_WRITE => '
+false', DATA_BLOCK_ENCODING => 'NONE', TTL => 'FOREVER', MIN_VERSIONS => '0', REPLICATION_SCOPE => '0', BLOOMFILTER => 'ROW', CACHE_INDEX_ON_WRITE => 'false', 
+IN_MEMORY => 'false', CACHE_BLOOMS_ON_WRITE => 'false', PREFETCH_BLOCKS_ON_OPEN => 'false', COMPRESSION => 'NONE', BLOCKCACHE => 'true', BLOCKSIZE => '65536'} 
+1 row(s)
+QUOTAS                                                                                                                                                         
+0 row(s)
+Took 0.0462 seconds    ---> (VERSIONS => '5')
+
