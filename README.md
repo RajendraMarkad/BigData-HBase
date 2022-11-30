@@ -18,12 +18,12 @@ It integrates with Hadoop, both as a source and a destination.
 It has easy java API for client.
 It provides data replication across clusters.
 
-#Where to Use HBase
+#Where to Use HBase?
 Apache HBase is used to have random, real-time read/write access to Big Data.
 It hosts very large tables on top of clusters of commodity hardware.
 Apache HBase is a non-relational database modeled after Google's Bigtable. Bigtable acts up on Google File System, likewise Apache HBase works on top of Hadoop and HDFS.
 
-#Applications of HBase
+#Applications of HBase:
 It is used whenever there is a need to write heavy applications.
 HBase is used whenever we need to provide fast random access to available data.
 Companies such as Facebook, Twitter, Yahoo, and Adobe use HBase internally.
