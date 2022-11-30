@@ -5,3 +5,11 @@ case sensitive syntax/keywords.
 Row key can be unique.
 The default versions is 1 and we can specify max as we wish:
 (HBase does not overwrite row values, but rather stores different values per row by time (and qualifier). Excess versions are removed during major compactions.)
+
+#Does HBase use Hadoop to store data or is a separate database independent of Hadoop?
+The technical terms you used in the question are wrong.
+HBase is in itself, a Hadoop database, which means it provides NoSQL based data storage (column-wise). Hadoop is a framework
+Most importantly, HBase sits on top of Hadoop Distributed File System. (HDFS) That's where your data is.
+
+
+
